@@ -1,0 +1,6 @@
+2025-05-26 10:47:35,666 - __main__ - INFO - API configured with model: gpt-4o-mini via OpenRouter
+2025-05-26 10:47:35,666 - __main__ - INFO - Facebook Comment Bot initialized successfully
+2025-05-26 10:47:35,666 - __main__ - INFO - No previous data file found, starting fresh
+2025-05-26 10:47:49,788 - __main__ - INFO - Successfully processed comment with neutral sentiment
+2025-05-26 10:48:09,318 - __main__ - INFO - Successfully processed comment with neutral sentiment
+2025-05-26 10:48:46,771 - __main__ - INFO - Successfully processed comment with negative sentiment
