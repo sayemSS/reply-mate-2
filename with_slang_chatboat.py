@@ -1,14 +1,12 @@
-from flask import Flask, request, jsonify
 import os
 import re
 import requests
 import time
+import json
 from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
-
-app = Flask(__name__)
 
 
 class FacebookBot:
@@ -272,103 +270,294 @@ IMPORTANT: Reply ONLY based on the page information above. If the comment asks a
             return {"error": str(e)}
 
 
-# Initialize bot instance
-bot = FacebookBot()
-
-
-@app.route('/set-page-info', methods=['POST'])
-def set_page_info():
-    """Set or update Facebook page information"""
+# POST-like functionality functions
+def process_comment_request(data):
+    """
+    POST /generate-reply এর মতো functionality
+    Input: {"comment": "...", "page_info": "..."}
+    Output: {"success": True/False, "data": {...}}
+    """
     try:
-        data = request.get_json()
-        if not data or 'page_info' not in data:
-            return jsonify({
+        # Input validation
+        if not isinstance(data, dict):
+            return {
                 "success": False,
-                "message": "page_info is required"
-            }), 400
+                "message": "Invalid data format. Expected JSON object."
+            }
 
-        bot.set_page_info(data['page_info'])
-        return jsonify({
-            "success": True,
-            "message": "Page information updated successfully"
-        })
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "message": f"Error: {str(e)}"
-        }), 500
-
-
-@app.route('/generate-reply', methods=['POST'])
-def generate_reply():
-    """Generate reply for a comment/question"""
-    try:
-        data = request.get_json()
-
-        # Validate input
-        if not data:
-            return jsonify({
+        if "comment" not in data or not data["comment"].strip():
+            return {
                 "success": False,
-                "message": "JSON data is required"
-            }), 400
+                "message": "Comment field is required and cannot be empty."
+            }
 
-        if 'comment' not in data or not data['comment'].strip():
-            return jsonify({
-                "success": False,
-                "message": "comment field is required and cannot be empty"
-            }), 400
+        # Initialize bot
+        bot = FacebookBot()
 
-        # Optional: Set page info if provided
-        if 'page_info' in data and data['page_info']:
-            bot.set_page_info(data['page_info'])
+        # Set page info if provided
+        if "page_info" in data and data["page_info"]:
+            bot.set_page_info(data["page_info"])
 
         # Generate reply
-        comment = data['comment'].strip()
+        comment = data["comment"].strip()
         result = bot.generate_reply(comment)
 
-        if 'error' in result:
-            return jsonify({
+        if "error" in result:
+            return {
                 "success": False,
-                "message": result['error']
-            }), 500
+                "message": result["error"]
+            }
 
-        return jsonify({
+        return {
             "success": True,
             "data": {
                 "original_comment": comment,
-                "reply": result['reply'],
-                "sentiment": result['sentiment'],
-                "response_time": result['response_time'],
-                "controlled": result['controlled'],
-                "slang_detected": result['slang_detected'],
+                "reply": result["reply"],
+                "sentiment": result["sentiment"],
+                "response_time": result["response_time"],
+                "controlled": result["controlled"],
+                "slang_detected": result["slang_detected"],
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
-        })
+        }
 
     except Exception as e:
-        return jsonify({
+        return {
             "success": False,
             "message": f"Server error: {str(e)}"
-        }), 500
+        }
 
 
-@app.route('/health', methods=['GET'])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({
-        "success": True,
-        "message": "Facebook Bot API is running",
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    })
+def set_page_info_request(data):
+    """
+    POST /set-page-info এর মতো functionality
+    Input: {"page_info": "..."}
+    Output: {"success": True/False, "message": "..."}
+    """
+    try:
+        if not isinstance(data, dict) or "page_info" not in data:
+            return {
+                "success": False,
+                "message": "page_info field is required"
+            }
+
+        page_info = data["page_info"].strip()
+        if not page_info:
+            return {
+                "success": False,
+                "message": "Page information cannot be empty"
+            }
+
+        return {
+            "success": True,
+            "message": "Page information saved successfully",
+            "data": {
+                "page_info": page_info,
+                "word_count": len(page_info.split()),
+                "character_count": len(page_info),
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "status": "Active"
+            }
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error: {str(e)}"
+        }
+
+
+def get_user_input_for_page_info():
+    """Get page info from user input"""
+    print("\n📋 Set Page Information:")
+    print("Enter your Facebook page information (press Enter twice to finish):")
+
+    lines = []
+    while True:
+        line = input()
+        if line == "" and len(lines) > 0:
+            break
+        elif line == "" and len(lines) == 0:
+            continue
+        lines.append(line)
+
+    page_info = "\n".join(lines)
+    return {"page_info": page_info}
+
+
+def get_user_input_for_comment():
+    """Get comment and page info from user input"""
+    print("\n💬 Generate Reply for Comment:")
+
+    # Get comment
+    comment = input("Enter the comment: ").strip()
+    if not comment:
+        return None
+
+    # Ask if user wants to provide page info
+    provide_page_info = input("\nDo you want to provide page information? (y/n): ").strip().lower()
+
+    data = {"comment": comment}
+
+    if provide_page_info == 'y':
+        print("\nEnter page information (press Enter twice to finish):")
+        lines = []
+        while True:
+            line = input()
+            if line == "" and len(lines) > 0:
+                break
+            elif line == "" and len(lines) == 0:
+                continue
+            lines.append(line)
+
+        if lines:
+            data["page_info"] = "\n".join(lines)
+
+    return data
+
+
+# Main function for testing
+def main():
+    print("🤖 Facebook Bot - Interactive Mode")
+    print("=" * 50)
+
+    while True:
+        print("\n📋 Choose an option:")
+        print("1. Set Page Information")
+        print("2. Generate Reply for Comment")
+        print("3. Show Demo Examples")
+        print("4. Exit")
+
+        choice = input("\nEnter your choice (1-4): ").strip()
+
+        if choice == "1":
+            # Set page info
+            try:
+                print("\n" + "=" * 60)
+                print("📋 SETTING PAGE INFORMATION")
+                print("=" * 60)
+
+                data = get_user_input_for_page_info()
+
+                print("\n📥 INPUT DATA:")
+                print(f"Page Info: {data['page_info']}")
+
+                result = set_page_info_request(data)
+
+                print("\n📤 PROCESSING RESULT:")
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+
+                if result['success']:
+                    print(f"\n✅ SUCCESS: Page information has been saved!")
+                    print(f"📊 Statistics:")
+                    print(f"   - Words: {result['data']['word_count']}")
+                    print(f"   - Characters: {result['data']['character_count']}")
+                    print(f"   - Status: {result['data']['status']}")
+                else:
+                    print(f"\n❌ FAILED: {result['message']}")
+
+            except Exception as e:
+                print(f"❌ Error: {str(e)}")
+
+        elif choice == "2":
+            # Generate reply
+            try:
+                print("\n" + "=" * 60)
+                print("💬 GENERATING REPLY FOR COMMENT")
+                print("=" * 60)
+
+                data = get_user_input_for_comment()
+                if data is None:
+                    print("❌ Comment cannot be empty!")
+                    continue
+
+                print("\n📥 INPUT DATA:")
+                print(f"Comment: {data['comment']}")
+                if 'page_info' in data:
+                    print(f"Page Info: {data['page_info']}")
+                else:
+                    print("Page Info: Not provided")
+
+                result = process_comment_request(data)
+
+                print("\n📤 PROCESSING RESULT:")
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+
+                if result['success']:
+                    print(f"\n✅ REPLY GENERATED:")
+                    print(f"🔤 Original Comment: {result['data']['original_comment']}")
+                    print(f"💬 Bot Reply: {result['data']['reply']}")
+                    print(f"😊 Sentiment: {result['data']['sentiment']}")
+                    print(f"⏱️ Response Time: {result['data']['response_time']}")
+                    print(f"🚫 Slang Detected: {'Yes' if result['data']['slang_detected'] else 'No'}")
+                    print(f"✅ Controlled Response: {'Yes' if result['data']['controlled'] else 'No'}")
+                else:
+                    print(f"\n❌ FAILED: {result['message']}")
+
+            except Exception as e:
+                print(f"❌ Error: {str(e)}")
+
+        elif choice == "3":
+            # Show demo examples
+            print("\n" + "=" * 60)
+            print("🎯 DEMO EXAMPLES")
+            print("=" * 60)
+
+            examples = [
+                {
+                    "title": "Normal Comment Example",
+                    "data": {
+                        "comment": "আপনাদের web development এর দাম কত?",
+                        "page_info": "আমাদের কোম্পানি Skill Bangladesh web development এবং mobile app development সার্ভিস প্রদান করে। Web development এর দাম ৫০,০০০ টাকা থেকে শুরু।"
+                    }
+                },
+                {
+                    "title": "Slang Detection Example",
+                    "data": {
+                        "comment": "তোমাদের সার্ভিস shit!",
+                        "page_info": "আমাদের কোম্পানি IT সার্ভিস দেয়।"
+                    }
+                },
+                {
+                    "title": "Positive Comment Example",
+                    "data": {
+                        "comment": "আপনাদের কোর্স অনেক ভালো! ধন্যবাদ!",
+                        "page_info": "Skill Bangladesh এ আমরা Python, Web Development, এবং Digital Marketing কোর্স করি।"
+                    }
+                }
+            ]
+
+            for i, example in enumerate(examples, 1):
+                print(f"\n📋 Example {i}: {example['title']}")
+                print("-" * 40)
+                print(f"📥 Input:")
+                print(f"   Comment: {example['data']['comment']}")
+                print(f"   Page Info: {example['data']['page_info']}")
+
+                result = process_comment_request(example['data'])
+
+                print(f"📤 Output:")
+                if result['success']:
+                    print(f"   Reply: {result['data']['reply']}")
+                    print(f"   Sentiment: {result['data']['sentiment']}")
+                    print(f"   Slang Detected: {'Yes' if result['data']['slang_detected'] else 'No'}")
+                else:
+                    print(f"   Error: {result['message']}")
+                print()
+
+        elif choice == "4":
+            print("👋 Goodbye!")
+            break
+
+        else:
+            print("❌ Invalid choice! Please enter 1-4.")
+
+        # Ask if user wants to continue
+        continue_choice = input("\nDo you want to perform another operation? (y/n): ").strip().lower()
+        if continue_choice != 'y':
+            print("👋 Goodbye!")
+            break
 
 
 if __name__ == "__main__":
-    print("🤖 Facebook Bot API Server Starting...")
-    print("📍 Server will run on: http://localhost:5000")
-    print("🔗 Available endpoints:")
-    print("   POST /set-page-info - Set page information")
-    print("   POST /generate-reply - Generate reply for comments")
-    print("   GET  /health - Health check")
-    print("=" * 50)
-
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    main()
