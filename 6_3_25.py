@@ -5,19 +5,20 @@ import requests
 import time
 from datetime import datetime
 from dotenv import load_dotenv
-import tiktoken # Library for token counting
+import tiktoken  # Library for token counting
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 
+
 class FacebookBot:
     def __init__(self):
         # Retrieve API key from environment variables
         self.api_key = os.getenv("OPENAI_API_KEY")
         self.base_url = "https://openrouter.ai/api/v1/chat/completions"
-        self.model = "gpt-4o-mini" # Using the specified model for response generation
+        self.model = "gpt-4o-mini"  # Using the specified model for response generation
 
         # Ensure API key is present
         if not self.api_key:
@@ -39,7 +40,7 @@ class FacebookBot:
         # Store conversation context for each page and post
         self.conversation_context = {}
         # Store recent comments for conversational flow
-        self.previous_comments = {} # Changed to dictionary to store history per page_id_post_id
+        self.previous_comments = {}  # Changed to dictionary to store history per page_id_post_id
 
         # Stores the current comment count for each page_id
         # Example: {"page_id_1": 45, "page_id_2": 20}
@@ -64,7 +65,7 @@ class FacebookBot:
             "slut", "whore", "prostitute", "sl*t", "wh*re",
             "bastard", "b*stard", "b**tard",
             "dumbass", "stupid", "idiot", "moron", "retard",
-            "wtf", "stfu","khanki","magi"
+            "wtf", "stfu",
 
             # Common internet slang/abbreviations
             "lmao", "lmfao", "omfg", "fml", "gtfo", "kys",
@@ -79,7 +80,7 @@ class FacebookBot:
             "huda", "bokbok", "biriktikor",
 
             # Mixed language slang
-            "মাদার চোদ", "ফাক", "শিট", "বিচ", "ড্যাম","chutmaranie"
+            "মাদার চোদ", "ফাক", "শিট", "বিচ", "ড্যাম"
         ]
 
         self.slang_patterns = [
@@ -117,7 +118,7 @@ class FacebookBot:
         Gets the maximum comment reply limit for a specific page.
         (Less relevant for the new flow).
         """
-        return -1 # Always return -1 as the limit is expected from the payload now
+        return -1  # Always return -1 as the limit is expected from the payload now
 
     def increment_comment_count(self, page_id, comment_id):
         """Increments the comment count for a given page, ensuring each unique comment_id is counted only once."""
@@ -126,7 +127,6 @@ class FacebookBot:
             self.processed_comment_ids.add(comment_id)
         # else:
         #     print(f"Comment ID {comment_id} already processed for page {page_id}. Count not incremented.")
-
 
     def get_comment_count(self, page_id):
         """Gets the current comment count for a given page."""
@@ -196,9 +196,9 @@ class FacebookBot:
         }
         for symbol, replacement in symbol_replacements.items():
             text = text.replace(symbol, replacement)
-        text = re.sub(r'[.!?]{2,}', '.', text) # Normalize multiple punctuation marks
-        text = re.sub(r'[-_]{2,}', ' ', text) # Replace multiple hyphens/underscores with space
-        text = re.sub(r'(.)\1{2,}', r'\1\1', text) # Reduce more than two repetitions of any character
+        text = re.sub(r'[.!?]{2,}', '.', text)  # Normalize multiple punctuation marks
+        text = re.sub(r'[-_]{2,}', ' ', text)  # Replace multiple hyphens/underscores with space
+        text = re.sub(r'(.)\1{2,}', r'\1\1', text)  # Reduce more than two repetitions of any character
         return text
 
     def contains_slang(self, text):
@@ -251,10 +251,10 @@ class FacebookBot:
                     # Check if it's actually a false positive context
                     is_false_positive = False
                     for fp_word in false_positives[slang_lower]:
-                        if fp_word in original_lower: # Check if the false positive word is present
+                        if fp_word in original_lower:  # Check if the false positive word is present
                             is_false_positive = True
                             break
-                    if not is_false_positive: # If it's not a false positive, then it's slang
+                    if not is_false_positive:  # If it's not a false positive, then it's slang
                         return True
             else:
                 # Normal word boundary check for other slang words
@@ -271,7 +271,7 @@ class FacebookBot:
                         return True
 
         # Method 3: Check for intentionally spaced out slang (only for longer words)
-        spaced_text = re.sub(r'\s+', '', cleaned) # Remove all spaces
+        spaced_text = re.sub(r'\s+', '', cleaned)  # Remove all spaces
         for slang in self.slang_words:
             slang_lower = slang.lower()
             if len(slang_lower) >= 5 and slang_lower in spaced_text:  # Increased minimum length for this check
@@ -359,7 +359,7 @@ class FacebookBot:
                     "হ্যালো! আপনাকে স্বাগতম। 👋",
                     "নমস্কার! কী সাহায্য করতে পারি? 🙏"
                 ])
-            else: # Defaults to English if not explicitly Bangla
+            else:  # Defaults to English if not explicitly Bangla
                 return random.choice([
                     "Hello! Welcome to our page! 👋",
                     "Hi there! How can we help you? 😊",
@@ -389,7 +389,7 @@ class FacebookBot:
                     "আপনার সাপোর্টের জন্য ধন্যবাদ! ❤️",
                     "অসংখ্য ধন্যবাদ আপনাকে! 😊"
                 ]
-            else: # Defaults to English if not explicitly Bangla
+            else:  # Defaults to English if not explicitly Bangla
                 fallbacks = [
                     "Thank you for your kind words! 😊",
                     "We appreciate your support! ❤️",
@@ -402,20 +402,20 @@ class FacebookBot:
                     "আমরা এই বিষয়ে খোঁজ নিয়ে জানাবো।",
                     "দুঃখিত! বিস্তারিত জানতে আমাদের সাথে যোগাযোগ করুন।"
                 ]
-            else: # Defaults to English if not explicitly Bangla
+            else:  # Defaults to English if not explicitly Bangla
                 fallbacks = [
                     "Sorry for any inconvenience. Please message us for details.",
                     "We'll look into this matter and get back to you.",
                     "Sorry! Please contact us for more information."
                 ]
-        else: # Neutral sentiment
+        else:  # Neutral sentiment
             if comment_language == "bangla":
                 fallbacks = [
                     "আমাদের পেজ সম্পর্কিত কোনো প্রশ্ন থাকলে ইনবক্সে মেসেজ করুন, আমরা সাহায্য করবো।",
                     "আমাদের সেবা বা পণ্য সম্পর্কে জানতে ইনবক্সে যোগাযোগ করুন।",
                     "আপনার প্রশ্নের উত্তর পেতে দয়া করে আমাদের সাথে সরাসরি যোগাযোগ করুন।"
                 ]
-            else: # Defaults to English if not explicitly Bangla
+            else:  # Defaults to English if not explicitly Bangla
                 fallbacks = [
                     "For any questions about our page, please message us in inbox. We'll help you.",
                     "To know about our services or products, please contact us via inbox.",
@@ -428,18 +428,32 @@ class FacebookBot:
         Detects if a comment is primarily in Bangla or English by counting character sets.
         Returns "bangla", "english", or "mixed".
         """
-        bangla_chars = re.findall(r'[\u0980-\u09FF]', comment) # Unicode range for Bengali characters
-        english_chars = re.findall(r'[a-zA-Z]', comment) # English alphabet characters
+        bangla_chars = re.findall(r'[\u0980-\u09FF]', comment)  # Unicode range for Bengali characters
+        english_chars = re.findall(r'[a-zA-Z]', comment)  # English alphabet characters
 
         bangla_count = len(bangla_chars)
         english_count = len(english_chars)
 
-        if bangla_count > english_count * 0.5: # More lenient for Bangla if some English present
+        if bangla_count > english_count * 0.5:  # More lenient for Bangla if some English present
             return "bangla"
-        elif english_count > bangla_count * 0.5: # More lenient for English if some Bangla present
+        elif english_count > bangla_count * 0.5:  # More lenient for English if some Bangla present
             return "english"
         else:
-            return "mixed" # If counts are roughly equal or both are low, treat as mixed or unknown
+            return "mixed"  # If counts are roughly equal or both are low, treat as mixed or unknown
+
+    def extract_contact_info(self, post_content):
+        """
+        Extracts website link, WhatsApp number, and Facebook group link from post content.
+        """
+        website_link = re.search(r'https://ghorerbazar\.com/\S+', post_content)
+        whatsapp_number = re.search(r'\+880\d{10}', post_content)
+        facebook_group_link = re.search(r'https://www\.facebook\.com/groups/\S+', post_content)
+
+        return {
+            "website": website_link.group(0) if website_link else None,
+            "whatsapp": whatsapp_number.group(0) if whatsapp_number else None,
+            "facebook_group": facebook_group_link.group(0) if facebook_group_link else None
+        }
 
     def generate_reply(self, json_data):
         """
@@ -449,6 +463,7 @@ class FacebookBot:
         Includes token counting for the LLM response.
         """
         start_time = time.time()
+        reply_status_code = 200  # Default status code for OK
 
         # Extract data from the incoming JSON payload
         data = json_data.get("data", {})
@@ -468,23 +483,25 @@ class FacebookBot:
         comment_id = comment_info.get("comment_id", "")
 
         # --- Get comment limit directly from incoming page_info ---
-        provided_comment_limit = page_info.get("comment limit") # Accessing "comment limit" key
+        provided_comment_limit = page_info.get("comment limit")  # Accessing "comment limit" key
         if provided_comment_limit is not None:
             try:
                 provided_comment_limit = int(provided_comment_limit)
             except ValueError:
                 print(f"Warning: 'comment limit' for page {page_id} is not an integer. Treating as no limit (-1).")
-                provided_comment_limit = -1 # Treat as no limit if not an integer
+                provided_comment_limit = -1  # Treat as no limit if not an integer
         else:
-            provided_comment_limit = -1 # Default to no limit if not provided
+            provided_comment_limit = -1  # Default to no limit if not provided
 
         # --- Check and apply comment limits using the provided limit ---
-        if page_id: # Only apply limit if page_id is available
+        if page_id:  # Only apply limit if page_id is available
             # Check limit BEFORE incrementing count for the current comment
             if self.is_limit_reached(page_id, provided_comment_limit):
                 print(f"Comment limit reached for page_id: {page_id}. No reply generated.")
+                reply_status_code = 555 # Post off-topic due to limit reached
+                limit_reply = "Your comment limit is over. Please try again later."
                 return {
-                    "reply": "We have received many comments on this page. We will address all queries as soon as possible. Thank you for your understanding.",
+                    "reply": limit_reply,
                     "sentiment": "Neutral",
                     "response_time": f"{time.time() - start_time:.2f}s",
                     "controlled": True,
@@ -493,11 +510,13 @@ class FacebookBot:
                     "commenter_name": comment_info.get("commenter_name", ""),
                     "page_name": page_info.get("page_name", ""),
                     "post_id": post_id,
-                    "note": f"Comment limit of {provided_comment_limit} reached for this page. Current count: {self.get_comment_count(page_id)}."
+                    "note": f"Comment limit of {provided_comment_limit} reached for this page. Current count: {self.get_comment_count(page_id)}.",
+                    "status_code": reply_status_code, # Add status code
+                    "output_tokens": self.count_tokens(limit_reply) # Token count for limit message
                 }
             else:
                 # Increment count only if limit is NOT reached and this comment_id hasn't been processed before
-                self.increment_comment_count(page_id, comment_id) # Pass comment_id for unique tracking
+                self.increment_comment_count(page_id, comment_id)  # Pass comment_id for unique tracking
         # --- END Comment Limiting ---
 
         if page_id and post_id:
@@ -509,38 +528,53 @@ class FacebookBot:
             # Get comment language to ensure slang response matches language
             comment_language_for_slang = self.detect_comment_language(comment_text)
             slang_reply = self.get_slang_response()
+            reply_status_code = 444 # Slang detected
             return {
                 "reply": slang_reply,
                 "sentiment": "Inappropriate",
                 "response_time": f"{response_time:.2f}s",
-                "controlled": True, # Indicates a controlled, predefined response
+                "controlled": True,  # Indicates a controlled, predefined response
                 "slang_detected": True,
                 "comment_id": comment_id,
                 "commenter_name": comment_info.get("commenter_name", ""),
                 "page_name": page_info.get("page_name", ""),
                 "post_id": post_id,
-                "output_tokens": self.count_tokens(slang_reply) # Token count for slang response
+                "output_tokens": self.count_tokens(slang_reply),  # Token count for slang response
+                "status_code": reply_status_code # Add status code
             }
 
         # If no slang detected, proceed with normal processing
         comment_language = self.detect_comment_language(comment_text)
         sentiment = self.get_sentiment(comment_text)
 
+        # Extract contact information from the post content
+        contact_info = self.extract_contact_info(post_info.get("post_content", ""))
+        website_link = contact_info["website"]
+        whatsapp_number = contact_info["whatsapp"]
+        facebook_group_link = contact_info["facebook_group"]
+
         # Build context string for the LLM from the JSON data
         context = f"Page Name: {page_info.get('page_name', 'Unknown')} (ID: {page_id})\n"
         context += f"Post Content: {post_info.get('post_content', 'No content available')}\n"
-        context += f"Post Type: {post_info.get('post_type', 'Unknown')}\n\n"
+        context += f"Post Type: {post_info.get('post_type', 'Unknown')}\n"
+        if website_link:
+            context += f"Website Link: {website_link}\n"
+        if whatsapp_number:
+            context += f"WhatsApp Number: {whatsapp_number}\n"
+        if facebook_group_link:
+            context += f"Facebook Group: {facebook_group_link}\n"
+        context += "\n"
 
         # Include recent comments in the context for better conversational flow (specific to page_id_post_id)
         context_key = f"{page_id}_{post_id}"
         if context_key in self.previous_comments and self.previous_comments[context_key]:
             context += "Recent Comments for Context:\n"
-            for prev in self.previous_comments[context_key][-3:]: # Include last 3 comments for this specific page_post
+            for prev in self.previous_comments[context_key][-3:]:  # Include last 3 comments for this specific page_post
                 context += f"- {prev['comment_text']} by {prev['commenter_name']} ({prev['timestamp']})\n"
             context += "\n"
 
         # System prompt for the language model, generalized for database input
-        system_prompt = """You are a page manager. Reply to comments STRICTLY based on provided page and post information only.
+        system_prompt = f"""You are a page manager for Ghorer Bazar. Your primary goal is to provide helpful and concise replies.
 
 STRICT RULES:
 1. NEVER answer questions beyond the provided page/post information.
@@ -554,6 +588,7 @@ STRICT RULES:
     - If comment is in English, reply in English.
     - If comment is mixed, use the dominant language or a neutral blend if unsure.
 8. Use a natural, conversational tone.
+9. **CRITICAL:** If the comment asks about how to order, pricing, availability, or any other query that directly relates to purchasing or getting more information about the product, you **MUST** include the relevant contact information (website link, WhatsApp number, or Facebook group link) from the post content. Prioritize the website link for orders, and WhatsApp for queries from abroad.
 
 RESPONSE STYLE:
 - Positive comments: Thank briefly.
@@ -566,7 +601,7 @@ RESPONSE STYLE:
             language_instruction = "IMPORTANT: The comment is in BANGLA. You MUST reply in BANGLA language only. Do NOT use English."
         elif comment_language == "english":
             language_instruction = "IMPORTANT: The comment is in ENGLISH. You MUST reply in ENGLISH language only. Do NOT use Bangla."
-        else: # Mixed or unknown language
+        else:  # Mixed or unknown language
             language_instruction = "IMPORTANT: The comment is mixed language. Reply in the dominant language or a neutral blend, prioritizing clarity."
 
         # User prompt combining context, current comment, and language instruction
@@ -587,11 +622,11 @@ Reply ONLY based on the page and post information above. If the comment asks abo
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            "max_tokens": 150, # Max tokens for the response
-            "temperature": 0.4, # Controls randomness of the response
-            "top_p": 0.9, # Controls diversity via nucleus sampling
-            "frequency_penalty": 0.2, # Penalizes new tokens based on their existing frequency in the text
-            "presence_penalty": 0.1 # Penalizes new tokens based on whether they appear in the text so far
+            "max_tokens": 150,  # Max tokens for the response
+            "temperature": 0.4,  # Controls randomness of the response
+            "top_p": 0.9,  # Controls diversity via nucleus sampling
+            "frequency_penalty": 0.2,  # Penalizes new tokens based on their existing frequency in the text
+            "presence_penalty": 0.1  # Penalizes new tokens based on whether they appear in the text so far
         }
 
         try:
@@ -611,189 +646,101 @@ Reply ONLY based on the page and post information above. If the comment asks abo
                 fallback_reply = self.get_fallback_response(comment_text, sentiment, comment_language)
                 fallback_tokens = self.count_tokens(fallback_reply)
                 reply = fallback_reply
-                output_tokens = fallback_tokens # Update token count for fallback
+                output_tokens = fallback_tokens  # Update token count for fallback
                 controlled_status = True
+                reply_status_code = 555 # Post off-topic (due to invalid LLM reply, leading to fallback)
             else:
-                controlled_status = True # LLM response was valid and controlled
+                controlled_status = False # LLM response was valid
+                reply_status_code = 200 # OK
 
-            # Add the current comment to history after processing
-            self.add_comment_history(page_id, post_id, comment_info)
+            # --- Post-processing: Ensure contact info is included if relevant ---
+            comment_lower = comment_text.lower()
+            keywords_for_contact = ['how to order', 'buy', 'price', 'দাম', 'কিভাবে পাবো', 'কোথায় পাবো', 'যোগাযোগ',
+                                    'whatsapp', 'website', 'লিংক', 'number', 'প্রি-অর্ডার', 'pre-order', 'কিনতে',
+                                    'order', 'যোগাযোগ']
 
-            # Return the generated reply and associated metadata
+            should_add_contact = any(keyword in comment_lower for keyword in keywords_for_contact)
+
+            # Add relevant contact info to the reply if needed
+            if should_add_contact:
+                contact_parts = []
+                if website_link:
+                    contact_parts.append(f"ওয়েবসাইট: {website_link}" if comment_language == "bangla" else f"Website: {website_link}")
+                if whatsapp_number:
+                    contact_parts.append(f"WhatsApp: {whatsapp_number}")
+                if facebook_group_link:
+                    contact_parts.append(f"Facebook Group: {facebook_group_link}")
+
+                if contact_parts:
+                    if comment_language == "bangla":
+                        reply += "\nবিস্তারিত জানতে বা অর্ডার করতে যোগাযোগ করুন: " + ", ".join(contact_parts) + "।"
+                    else:
+                        reply += "\nFor more details or to order, please contact us: " + ", ".join(contact_parts) + "."
+                    output_tokens = self.count_tokens(reply) # Re-count tokens after adding contact info
+
+            # Add the current comment to history only if a reply was generated (not for slang or limit reached)
+            if reply_status_code != 444 and reply_status_code != 555: # Don't add if slang or limit reached
+                self.add_comment_history(page_id, post_id, comment_info)
+
             return {
                 "reply": reply,
                 "sentiment": sentiment,
                 "response_time": f"{response_time:.2f}s",
                 "controlled": controlled_status,
-                "slang_detected": False,
+                "slang_detected": False, # No slang detected as it was handled earlier
                 "comment_id": comment_id,
                 "commenter_name": comment_info.get("commenter_name", ""),
                 "page_name": page_info.get("page_name", ""),
                 "post_id": post_id,
-                "output_tokens": output_tokens, # Add token count here
-                "current_comment_count": self.get_comment_count(page_id)
+                "output_tokens": output_tokens,
+                "status_code": reply_status_code # Add status code
             }
+
         except requests.exceptions.RequestException as e:
-            # Handle API call errors gracefully
+            print(f"Error calling OpenAI API: {e}")
             response_time = time.time() - start_time
-            print(f"API call failed: {e}") # Log the error
             fallback_reply = self.get_fallback_response(comment_text, sentiment, comment_language)
             fallback_tokens = self.count_tokens(fallback_reply)
-            return {
-                "reply": fallback_reply, # Use fallback on API error
-                "sentiment": sentiment,
-                "response_time": f"{response_time:.2f}s",
-                "controlled": True, # Fallback is a controlled response
-                "slang_detected": False,
-                "comment_id": comment_id,
-                "commenter_name": comment_info.get("commenter_name", ""),
-                "page_name": page_info.get("page_name", ""),
-                "post_id": post_id,
-                "note": f"Used fallback due to API error: {e}",
-                "output_tokens": fallback_tokens, # Token count for fallback response
-                "current_comment_count": self.get_comment_count(page_id)
-            }
-        except Exception as e:
-            # Catch any other unexpected errors during reply generation
-            response_time = time.time() - start_time
-            print(f"An unexpected error occurred: {e}") # Log the error
-            fallback_reply = self.get_fallback_response(comment_text, sentiment, comment_language)
-            fallback_tokens = self.count_tokens(fallback_reply)
+            reply_status_code = 555 # Post off-topic (due to API error, leading to fallback)
             return {
                 "reply": fallback_reply,
-                "sentiment": sentiment,
+                "sentiment": "Neutral",
                 "response_time": f"{response_time:.2f}s",
-                "controlled": True,
+                "controlled": True,  # Fallback is a controlled response
                 "slang_detected": False,
                 "comment_id": comment_id,
                 "commenter_name": comment_info.get("commenter_name", ""),
                 "page_name": page_info.get("page_name", ""),
                 "post_id": post_id,
-                "note": f"Used fallback due to unexpected error: {e}",
-                "output_tokens": fallback_tokens, # Token count for fallback response
-                "current_comment_count": self.get_comment_count(page_id)
+                "output_tokens": fallback_tokens,
+                "error": str(e),
+                "status_code": reply_status_code # Add status code
             }
 
 
-# Initialize bot instance globally
+# Example usage (Flask routes for webhook and processing comments)
 bot = FacebookBot()
 
-@app.route('/set-page-limit', methods=['POST'])
-def set_page_limit():
-    """
-    Endpoint for web developers to set a maximum comment reply limit for a specific page.
-    (This is now less critical as the limit is expected in the /process-comment payload).
-    Expected JSON: {"page_id": "your_page_id", "limit": 100}
-    """
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"success": False, "message": "JSON data is required"}), 400
-
-        page_id = data.get("page_id")
-        limit = data.get("limit")
-
-        if not page_id:
-            return jsonify({"success": False, "message": "page_id is required"}), 400
-        if limit is None: # Allow limit to be 0
-            return jsonify({"success": False, "message": "limit is required"}), 400
-
-        try:
-            limit = int(limit)
-            if limit < 0:
-                raise ValueError("Limit must be a non-negative integer.")
-        except ValueError:
-            return jsonify({"success": False, "message": "Limit must be an integer"}), 400
-
-        # bot.set_page_limit(page_id, limit) # This line is no longer directly setting the primary limit
-        return jsonify({
-            "success": True,
-            "message": f"Manual limit for page_id '{page_id}' (if used) set to {limit}.",
-            "page_id": page_id,
-            "limit": limit,
-            "current_count": bot.get_comment_count(page_id) # Show current count after setting limit
-        }), 200
-    except Exception as e:
-        print(f"Error in /set-page-limit: {e}")
-        return jsonify({"success": False, "message": f"Server error: {str(e)}"}), 500
-
+@app.route('/webhook', methods=['GET'])
+def webhook():
+    """Webhook for Facebook Messenger platform setup."""
+    challenge = request.args.get('hub.challenge')
+    return challenge
 
 @app.route('/process-comment', methods=['POST'])
 def process_comment():
-    """
-    API endpoint to process comment data received in JSON format from developers' database.
-    It validates the input, generates a reply using the bot, and returns a structured JSON response.
-    """
-    try:
-        json_data = request.get_json()
+    """Endpoint to process incoming comment data and generate replies."""
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "Invalid JSON data"}), 400
 
-        # Validate if JSON data is provided
-        if not json_data:
-            return jsonify({
-                "success": False,
-                "message": "JSON data is required"
-            }), 400
-
-        # Validate top-level 'data' field
-        if "data" not in json_data:
-            return jsonify({
-                "success": False,
-                "message": "Invalid JSON structure. 'data' field is required"
-            }), 400
-
-        data = json_data["data"]
-
-        # Validate 'comment_info' field within 'data'
-        if "comment_info" not in data:
-            return jsonify({
-                "success": False,
-                "message": "comment_info is required in data"
-            }), 400
-
-        comment_info = data["comment_info"]
-        # Validate 'comment_text' within 'comment_info'
-        if not comment_info.get("comment_text", "").strip():
-            return jsonify({
-                "success": False,
-                "message": "comment_text is required and cannot be empty"
-            }), 400
-
-        # Generate reply
-        result = bot.generate_reply(json_data)
-
-        # Handle errors returned by generate_reply or limit reached messages
-        if 'error' in result:
-            return jsonify({
-                "success": False,
-                "message": result['error']
-            }), 500
-        elif "note" in result and "Comment limit reached" in result["note"]:
-             # Specific response for limit reached
-             return jsonify({
-                "success": True, # Still a successful process in that it correctly identified the limit
-                "message": result["reply"], # Use the predefined limit message as the main message
-                "page_id": result.get("page_id"),
-                "post_id": result.get("post_id"),
-                "comment_id": result.get("comment_id"),
-                "sentiment": result.get("sentiment"),
-                "response_time": result.get("response_time"),
-                "controlled": result.get("controlled"),
-                "slang_detected": result.get("slang_detected"),
-                "note": result["note"], # Include the detailed note
-                "current_comment_count": result.get("current_comment_count") # Include current count
-             }), 200 # Return 200 OK as it's a valid, handled scenario
-        else:
-            # For successful reply generation
-            return jsonify({
-                "success": True,
-                "reply_data": result
-            }), 200
-
-    except Exception as e:
-        print(f"Error in /process-comment endpoint: {e}")
-        return jsonify({"success": False, "message": f"Server error: {str(e)}"}), 500
+    reply_data = bot.generate_reply(data)
+    # Return the generated reply and other info
+    return jsonify(reply_data), reply_data.get("status_code", 200) # Use the status code from reply_data
 
 
 if __name__ == '__main__':
+    # For local development, load environment variables from .env
+    load_dotenv()
     # Run the Flask app
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=os.getenv("PORT", 5000))
