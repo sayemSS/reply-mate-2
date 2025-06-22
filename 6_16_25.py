@@ -46,7 +46,10 @@ class FacebookBot:
         # Example: {"page_id_1": 45, "page_id_2": 20}
         self.comment_counts = {}
 
-        # Slang words and patterns
+        # --- IMPORTANT: Define your company name here ---
+        self.company_name = "GhorerBazar" # Set your company name here
+
+        # Slang words and patterns (kept as is, assuming current functionality is desired)
         self.slang_words = [
             # Core Bengali abusive terms (most common and offensive)
             "মাগি", "খানি", "চোদা", "চোদি", "চুদি", "চুদা", "রান্ড", "বেশ্যা", "বাঞ্চোত", "মাদারচোদ",
@@ -70,7 +73,7 @@ class FacebookBot:
             "dick", "cock", "penis", "d*ck", "c**k", "dik", "cok",
             "pussy", "vagina", "cunt", "p***y", "c**t", "pusy",
             "slut", "whore", "prostitute", "sl*t", "wh*re", "hore",
-            "bastard", "b*stard", "b**tard", "basstard",
+            "bastard", "b*stard", "b**tard",
             "dumbass", "stupid", "idiot", "moron", "retard", "dumb", "idiot", "moran",
             "wtf", "stfu", "gtfo", "kys", "lmao", "lmfao", "omfg", "fml",
 
@@ -98,7 +101,6 @@ class FacebookBot:
             "বালের চুদুর", "কুত্তার বাচ্চা", "হাগা", "হাগিস", "লেদা", "গু"
         ]
 
-        # Enhanced slang patterns for more effective detection
         self.slang_patterns = [
             # General repetition patterns for common slang words
             r'f+u+c+k+',  # fuck, fukkk, fukkkk
@@ -205,7 +207,7 @@ class FacebookBot:
             self.comment_counts[page_id] = self.comment_counts.get(page_id, 0) + 1
             self.processed_comment_ids.add(comment_id)
         # else:
-        #     print(f"Comment ID {comment_id} already processed for page {page_id}. Count not incremented.")
+        # print(f"Comment ID {comment_id} already processed for page {page_id}. Count not incremented.")
 
     def get_comment_count(self, page_id):
         """Gets the current comment count for a given page."""
@@ -422,6 +424,9 @@ class FacebookBot:
         Validates the generated reply to ensure it's within scope and length limits.
         Prevents the bot from giving overly general or lengthy responses.
         """
+        # The LLM prompt will now focus on generating short replies,
+        # so this validation can be less strict or removed if the LLM is well-controlled.
+        # Keeping it for an extra layer of safety.
         out_of_scope_indicators = [
             'generally', 'usually', 'typically', 'in most cases',
             'experts say', 'studies show', 'research indicates',
@@ -431,8 +436,8 @@ class FacebookBot:
         # Check for out-of-scope phrases
         if any(indicator in reply_lower for indicator in out_of_scope_indicators):
             return False
-        # Check for reply length (max 50 words)
-        if len(reply.split()) > 50:
+        # The LLM will be instructed to keep replies short, so this check acts as a safeguard.
+        if len(reply.split()) > 25: # Reduced to 25 words for even shorter replies
             return False
         return True
 
@@ -440,6 +445,7 @@ class FacebookBot:
         """
         Provides a relevant fallback response if the LLM fails or the generated
         reply is invalid. Responses are tailored to sentiment and language.
+        These fallback responses are also made shorter.
         """
         import random
         comment_lower = comment.lower()
@@ -450,76 +456,76 @@ class FacebookBot:
             if comment_language == "bangla":
                 return random.choice([
                     "আসসালামু আলাইকুম! কেমন আছেন? 😊",
-                    "হ্যালো! আপনাকে স্বাগতম। 👋",
+                    "হ্যালো! স্বাগতম। 👋",
                     "নমস্কার! কী সাহায্য করতে পারি? 🙏"
                 ])
             else:  # Defaults to English if not explicitly Bangla
                 return random.choice([
-                    "Hello! Welcome to our page! 👋",
-                    "Hi there! How can we help you? 😊",
-                    "Hey! Thanks for reaching out! 🙏"
+                    "Hello! Welcome! 👋",
+                    "Hi there! How can we help? 😊",
+                    "Hey! Thanks! 🙏"
                 ])
 
         # Check for application/job related keywords
         if any(word in comment_lower for word in ['application', 'apply', 'job', 'আবেদন', 'চাকরি', 'লিখতে', 'নিয়োগ']):
             if comment_language == "bangla":
                 return random.choice([
-                    "অ্যাপ্লিকেশন লেখার জন্য আমাদের অফিসিয়াল ফর্ম ডাউনলোড করুন অথবা সরাসরি ইনবক্সে যোগাযোগ করুন।",
-                    "আপনার আবেদন সংক্রান্ত প্রশ্নের জন্য আমাদের ইনবক্সে মেসেজ করুন, আমরা সাহায্য করবো।",
-                    "আবেদন প্রক্রিয়া সম্পর্কে বিস্তারিত জানতে দয়া করে আমাদের সাথে যোগাযোগ করুন।"
+                    "আবেদনের জন্য ইনবক্স করুন।",
+                    "আবেদন সংক্রান্ত প্রশ্নে ইনবক্স করুন।",
+                    "আবেদন প্রক্রিয়া জানতে যোগাযোগ করুন।"
                 ])
             else:
                 return random.choice([
-                    "Please download our official application form or contact us directly via inbox.",
-                    "For application related queries, please message us in inbox. We'll help you.",
-                    "For detailed information about application process, please contact us."
+                    "Inbox for applications.",
+                    "Message us for application queries.",
+                    "Contact us for application details."
                 ])
 
         # Fallback based on sentiment
         if sentiment == "Positive":
             if comment_language == "bangla":
                 fallbacks = [
-                    "ধন্যবাদ! আপনার মতামতের জন্য কৃতজ্ঞ। 🙏",
+                    "ধন্যবাদ! 🙏",
                     "আপনার সাপোর্টের জন্য ধন্যবাদ! ❤️",
-                    "অসংখ্য ধন্যবাদ আপনাকে! 😊",
+                    "অসংখ্য ধন্যবাদ! 😊",
                     "আপনার ভালো লাগলে আমরা আনন্দিত।"
                 ]
             else:  # Defaults to English if not explicitly Bangla
                 fallbacks = [
-                    "Thank you for your kind words! 😊",
+                    "Thank you! 😊",
                     "We appreciate your support! ❤️",
-                    "Thanks for your positive feedback! 🙏",
+                    "Thanks for your feedback! 🙏",
                     "Glad you liked it!"
                 ]
         elif sentiment == "Negative":
             if comment_language == "bangla":
                 fallbacks = [
-                    "দুঃখিত! আরো তথ্যের জন্য আমাদের ইনবক্স করুন।",
-                    "আমরা এই বিষয়ে খোঁজ নিয়ে জানাবো।",
-                    "দুঃখিত! বিস্তারিত জানতে আমাদের সাথে যোগাযোগ করুন।",
-                    "আপনার অসুবিধার জন্য ক্ষমাপ্রার্থী। আমরা এটি দেখছি।"
+                    "দুঃখিত! ইনবক্স করুন।",
+                    "আমরা বিষয়টি দেখছি।",
+                    "দুঃখিত! যোগাযোগ করুন।",
+                    "অসুবিধার জন্য ক্ষমাপ্রার্থী।"
                 ]
             else:  # Defaults to English if not explicitly Bangla
                 fallbacks = [
-                    "Sorry for any inconvenience. Please message us for details.",
-                    "We'll look into this matter and get back to you.",
-                    "Sorry! Please contact us for more information.",
-                    "We apologize for the trouble. We're looking into it."
+                    "Sorry! Please message us.",
+                    "We're looking into it.",
+                    "Sorry! Contact us.",
+                    "Apologies for the trouble."
                 ]
         else:  # Neutral sentiment
             if comment_language == "bangla":
                 fallbacks = [
-                    "আমাদের পেজ সম্পর্কিত কোনো প্রশ্ন থাকলে ইনবক্সে মেসেজ করুন, আমরা সাহায্য করবো।",
-                    "আমাদের সেবা বা পণ্য সম্পর্কে জানতে ইনবক্সে যোগাযোগ করুন।",
-                    "আপনার প্রশ্নের উত্তর পেতে দয়া করে আমাদের সাথে সরাসরি যোগাযোগ করুন।",
-                    "আরো কিছু জানতে চাইলে জিজ্ঞাসা করতে পারেন।"
+                    "ইনবক্স করুন, সাহায্য করবো।",
+                    "পণ্য সম্পর্কে জানতে ইনবক্স করুন।",
+                    "সরাসরি যোগাযোগ করুন।",
+                    "আরো কিছু জানতে চাইলে জিজ্ঞাসা করুন।"
                 ]
             else:  # Defaults to English if not explicitly Bangla
                 fallbacks = [
-                    "For any questions about our page, please message us in inbox. We'll help you.",
-                    "To know about our services or products, please contact us via inbox.",
-                    "For answers to your questions, please contact us directly.",
-                    "Feel free to ask if you have more questions."
+                    "Message us for help.",
+                    "Inbox to know about products.",
+                    "Contact us directly.",
+                    "Feel free to ask more."
                 ]
         return random.choice(fallbacks)
 
@@ -544,15 +550,24 @@ class FacebookBot:
     def extract_contact_info(self, post_content):
         """
         Extracts website link, WhatsApp number, and Facebook group link from post content.
+        Updated to extract company name from the website link and make it dynamic.
         """
-        website_link = re.search(r'https://ghorerbazar\.com/\S*', post_content)
+        website_link = re.search(r'https://(\S+?)\.com/\S*', post_content) # Broader match for website
         whatsapp_number = re.search(r'\+880\d{10}', post_content)
         facebook_group_link = re.search(r'https://www\.facebook\.com/groups/\S*', post_content)
+
+        extracted_company_name = None
+        if website_link:
+            # Heuristic to get company name from domain, e.g., "ghorerbazar" from "ghorerbazar.com"
+            domain = website_link.group(1)
+            extracted_company_name = domain.split('.')[-1] if '.' in domain else domain
+
 
         return {
             "website": website_link.group(0) if website_link else None,
             "whatsapp": whatsapp_number.group(0) if whatsapp_number else None,
-            "facebook_group": facebook_group_link.group(0) if facebook_group_link else None
+            "facebook_group": facebook_group_link.group(0) if facebook_group_link else None,
+            "extracted_company_name": extracted_company_name # Return extracted company name
         }
 
     def generate_reply(self, json_data):
@@ -610,238 +625,197 @@ class FacebookBot:
                     "commenter_name": comment_info.get("commenter_name", ""),
                     "page_name": page_info.get("page_name", ""),
                     "post_id": post_id,
-                    "note": f"Comment limit of {provided_comment_limit} reached for this page. Current count: {self.get_comment_count(page_id)}. No reply generated.",
-                    "status_code": reply_status_code,
-                    "output_tokens": 0  # No tokens in output as no reply
+                    "note": f"Comment limit of {provided_comment_limit} reached for this page. Current count: {self.get_comment_count(page_id)}. No reply generated due to limit."
                 }
-            else:
-                # Increment count only if limit is NOT reached and this comment_id hasn't been processed before
-                self.increment_comment_count(page_id, comment_id)  # Pass comment_id for unique tracking
-        # --- END Comment Limiting ---
 
-        if page_id and post_id:
-            self.store_conversation_context(page_id, post_id, page_info, post_info)
+            # Increment count AFTER the limit check, so the current comment is counted for *next* requests
+            self.increment_comment_count(page_id, comment_id)
 
-        # Check for slang FIRST and return an empty reply if detected
-        if self.contains_slang(comment_text):
-            response_time = time.time() - start_time
-            print(f"Slang detected in comment: '{comment_text}'. No reply generated.")
-            reply_status_code = 406  # Not Acceptable, or a custom 444
+        # --- Slang Detection ---
+        slang_detected = self.contains_slang(comment_text)
+        if slang_detected:
+            reply = ""  # No reply for slang
+            sentiment = "Negative" # Assign negative sentiment for slang comments
+            note = "Slang detected. No reply generated."
+            response_time = f"{time.time() - start_time:.2f}s"
+            # Return immediate response if slang is detected
             return {
-                "reply": "",  # Empty reply
-                "sentiment": "Inappropriate",
-                "response_time": f"{response_time:.2f}s",
-                "controlled": True,  # Indicates a controlled, predefined response
-                "slang_detected": True,
                 "comment_id": comment_id,
                 "commenter_name": comment_info.get("commenter_name", ""),
+                "controlled": True,
+                "input_tokens": 0,  # No LLM call, so 0 input tokens
+                "note": note,
+                "output_tokens": 0,  # No LLM call, so 0 output tokens
                 "page_name": page_info.get("page_name", ""),
                 "post_id": post_id,
-                "output_tokens": 0,  # No tokens in output as no reply
-                "status_code": reply_status_code,
-                "note": "Slang detected. No reply generated."
-            }
-
-        # If no slang detected, proceed with normal processing
-        comment_language = self.detect_comment_language(comment_text)
-        sentiment = self.get_sentiment(comment_text)
-
-        # Extract contact information from the post content
-        contact_info = self.extract_contact_info(post_info.get("post_content", ""))
-        website_link = contact_info["website"]
-        whatsapp_number = contact_info["whatsapp"]
-        facebook_group_link = contact_info["facebook_group"]
-
-        # Build context string for the LLM from the JSON data
-        context = f"Page Name: {page_info.get('page_name', 'Unknown')} (ID: {page_id})\n"
-        context += f"Post Content: {post_info.get('post_content', 'No content available')}\n"
-        context += f"Post Type: {post_info.get('post_type', 'Unknown')}\n"
-        if website_link:
-            context += f"Website Link: {website_link}\n"
-        if whatsapp_number:
-            context += f"WhatsApp Number: {whatsapp_number}\n"
-        if facebook_group_link:
-            context += f"Facebook Group: {facebook_group_link}\n"
-        context += "\n"
-
-        # Include recent comments in the context for better conversational flow (specific to page_id_post_id)
-        context_key = f"{page_id}_{post_id}"
-        if context_key in self.previous_comments and self.previous_comments[context_key]:
-            context += "Recent Comments for Context:\n"
-            for prev in self.previous_comments[context_key][-3:]:  # Include last 3 comments for this specific page_post
-                context += f"- {prev['comment_text']} by {prev['commenter_name']} ({prev['timestamp']})\n"
-            context += "\n"
-
-        # System prompt for the language model, generalized for database input
-        system_prompt = f"""You are a page manager for Ghorer Bazar. Your primary goal is to provide helpful and concise replies.
-
-STRICT RULES:
-1. NEVER answer questions beyond the provided page/post information.
-2. If asked about something not in page info, respond with polite fallback responses.
-3. Keep replies under 50 words maximum.
-4. Don't give general advice, tips, or external information.
-5. Only mention services/products/info that are specifically provided in the page/post data.
-6. If a comment is about something you don't have information about, acknowledge but don't elaborate.
-7. LANGUAGE MATCHING: Reply in the SAME language as the comment.
-    - If comment is in Bangla, reply in Bangla.
-    - If comment is in English, reply in English.
-    - If comment is mixed, use the dominant language or a neutral blend if unsure.
-8. Use a natural, conversational tone.
-9. **CRITICAL:** If the comment asks about how to order, pricing, availability, or any other query that directly relates to purchasing or getting more information about the product, you **MUST** include the relevant contact information (website link, WhatsApp number, or Facebook group link) from the post content. Prioritize the website link for orders, and WhatsApp for queries from abroad.
-
-RESPONSE STYLE:
-- Positive comments: Thank briefly.
-- Questions: Answer ONLY if info exists in the provided page/post details.
-- Complaints: Apologize briefly, offer to help via message.
-- General queries: Redirect to "contact us" if no specific information is available."""
-
-        # Language-specific instruction to guide the LLM's response language
-        if comment_language == "bangla":
-            language_instruction = "IMPORTANT: The comment is in BANGLA. You MUST reply in BANGLA language only. Do NOT use English."
-        elif comment_language == "english":
-            language_instruction = "IMPORTANT: The comment is in ENGLISH. You MUST reply in ENGLISH language only. Do NOT use Bangla."
-        else:  # Mixed or unknown language
-            language_instruction = "IMPORTANT: The comment is mixed language. Reply in the dominant language or a neutral blend, prioritizing clarity."
-
-        # User prompt combining context, current comment, and language instruction
-        user_prompt = f"""Page and Post Information Available:
-{context}
-
-Current Comment: "{comment_text}"
-Commenter: {comment_info.get('commenter_name', 'Anonymous')}
-
-{language_instruction}
-
-Reply ONLY based on the page and post information above. If the comment asks about anything not mentioned in the information, give a brief polite fallback response. Keep reply under 50 words. Match the language of the comment."""
-
-        # Payload for the API request to the language model
-        payload = {
-            "model": self.model,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
-            "max_tokens": 150,  # Max tokens for the response
-            "temperature": 0.4,  # Controls randomness of the response
-            "top_p": 0.9,  # Controls diversity via nucleus sampling
-            "frequency_penalty": 0.2,  # Penalizes new tokens based on their existing frequency in the text
-            "presence_penalty": 0.1  # Penalizes new tokens based on whether they appear in the text so far
-        }
-
-        try:
-            # Make API call to the language model
-            response = requests.post(self.base_url, headers=self.headers, json=payload, timeout=30)
-            # Raise an exception for bad status codes (4xx or 5xx)
-            response.raise_for_status()
-
-            reply = response.json()['choices'][0]['message']['content'].strip()
-            response_time = time.time() - start_time
-
-            # Count tokens for the generated reply
-            output_tokens = self.count_tokens(reply)
-
-            # Validate the LLM's response and use fallback if validation fails
-            if not self.validate_response(reply, comment_text):
-                fallback_reply = self.get_fallback_response(comment_text, sentiment, comment_language)
-                fallback_tokens = self.count_tokens(fallback_reply)
-                reply = fallback_reply
-                output_tokens = fallback_tokens  # Update token count for fallback
-                controlled_status = True
-                reply_status_code = 555 # Post off-topic (due to invalid LLM reply, leading to fallback)
-            else:
-                controlled_status = False # LLM response was valid
-                reply_status_code = 200 # OK
-
-            # --- Post-processing: Ensure contact info is included if relevant ---
-            # (Your existing post-processing logic for contact info would go here)
-            # Example: Check if the original comment asks about purchase/order and if contact info is available,
-            # then append it to the reply.
-            contact_keywords = ['order', 'price', 'buy', 'kon vabe', 'kivabe', 'kotha bolbo', 'contact', 'যোগাযোগ', 'অর্ডার', 'দাম', 'কিনব']
-            if any(keyword in comment_text.lower() for keyword in contact_keywords):
-                contact_details_added = False
-                if website_link and "website" not in reply.lower():
-                    reply += f" {website_link} ভিজিট করুন।" if comment_language == "bangla" else f" Visit: {website_link}"
-                    contact_details_added = True
-                elif whatsapp_number and "whatsapp" not in reply.lower() and not contact_details_added:
-                    reply += f" আমাদের WhatsApp করুন: {whatsapp_number}" if comment_language == "bangla" else f" WhatsApp us: {whatsapp_number}"
-                    contact_details_added = True
-                elif facebook_group_link and "group" not in reply.lower() and not contact_details_added:
-                    reply += f" আমাদের Facebook গ্রুপে যোগ দিন: {facebook_group_link}" if comment_language == "bangla" else f" Join our FB group: {facebook_group_link}"
-                    contact_details_added = True
-
-
-            self.add_comment_history(page_id, post_id, comment_info) # Add processed comment to history
-
-            return {
                 "reply": reply,
+                "response_time": response_time,
                 "sentiment": sentiment,
-                "response_time": f"{response_time:.2f}s",
-                "controlled": controlled_status,
-                "slang_detected": False,
-                "comment_id": comment_id,
-                "commenter_name": comment_info.get("commenter_name", ""),
-                "page_name": page_info.get("page_name", ""),
-                "post_id": post_id,
-                "output_tokens": output_tokens,
-                "status_code": reply_status_code
+                "slang_detected": True,
+                "status_code": 200 # Or a custom status code if preferred for slang, e.g., 204 No Content or 403 Forbidden
             }
+
+        # --- Sentiment and Language Detection ---
+        sentiment = self.get_sentiment(comment_text)
+        comment_language = self.detect_comment_language(comment_text)
+        commenter_name = comment_info.get("commenter_name", "User") # Default to "User" if name is missing
+
+        # Extract contact information
+        contact_info = self.extract_contact_info(post_info.get("post_content", ""))
+        website_link = contact_info.get("website")
+        whatsapp_number = contact_info.get("whatsapp")
+        facebook_group_link = contact_info.get("facebook_group")
+
+        # Dynamically get company name. Use the extracted one, or fallback to the pre-defined one.
+        # This makes it more robust if the company name appears in the post content.
+        # If the domain is just "com" or similar, use the fallback.
+        inferred_company_name = contact_info.get("extracted_company_name")
+        company_name_to_use = inferred_company_name if inferred_company_name and inferred_company_name != "com" else self.company_name
+
+        # --- Prepare for LLM Request ---
+        messages = []
+
+        # System prompt: Crucial for controlling behavior
+        system_prompt = f"""
+        You are an AI assistant for {company_name_to_use}'s Facebook page.
+        Your goal is to provide concise, helpful, and friendly replies to comments.
+        Keep replies very short, typically 1-2 sentences, and to the point.
+        Address the commenter by their name if available.
+        Mention the company name '{company_name_to_use}' naturally if relevant.
+        If contact information (website, WhatsApp, Facebook group) is available from the post, suggest visiting or contacting through those channels where appropriate.
+        Do NOT generate long paragraphs or elaborate explanations.
+        The current date and time is {datetime.now().strftime("%Y-%m-%d %H:%M")}.
+        """
+        messages.append({"role": "system", "content": system_prompt})
+
+        # Add page and post context
+        page_name = page_info.get("page_name", "this page")
+        post_content = post_info.get("post_content", "No specific post content available.")
+
+        context_message = f"User is commenting on '{page_name}' about a post with content: '{post_content}'."
+        messages.append({"role": "user", "content": context_message})
+
+
+        # Add previous comments for context (if any)
+        context_key = f"{page_id}_{post_id}"
+        if context_key in self.previous_comments:
+            for prev_comment in self.previous_comments[context_key]:
+                messages.append({"role": "user", "content": f"Previous comment from {prev_comment['commenter_name']}: {prev_comment['comment_text']}"})
+
+        # Add the current comment
+        current_comment_message = f"The current comment is from {commenter_name}: '{comment_text}'."
+        messages.append({"role": "user", "content": current_comment_message})
+
+        # Add specific instructions based on extracted info
+        contact_instructions = []
+        if website_link:
+            contact_instructions.append(f"Our website is: {website_link}")
+        if whatsapp_number:
+            contact_instructions.append(f"Our WhatsApp contact is: {whatsapp_number}")
+        if facebook_group_link:
+            contact_instructions.append(f"Our Facebook group is: {facebook_group_link}")
+
+        if contact_instructions:
+            messages.append({"role": "user", "content": "Relevant contact information for our company: " + " ".join(contact_instructions) + " Please suggest visiting our website, WhatsApp, or Facebook group if it makes sense."})
+        else:
+             messages.append({"role": "user", "content": "No specific contact information provided in the post. Generate a polite and concise general reply."})
+
+
+        # Calculate input tokens before the API call
+        input_tokens = self.count_tokens(" ".join([m["content"] for m in messages]))
+
+        # --- Call LLM API ---
+        try:
+            payload = {
+                "model": self.model,
+                "messages": messages,
+                "max_tokens": 50,  # Set a low max_tokens to encourage brevity
+                "temperature": 0.7,
+                "top_p": 0.9,
+                "stop": ["\n\n", "Commenter:", "User:"] # Common stop sequences
+            }
+            response = requests.post(self.base_url, headers=self.headers, json=payload, timeout=10)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            llm_response_json = response.json()
+            llm_reply = llm_response_json["choices"][0]["message"]["content"].strip()
+            output_tokens = self.count_tokens(llm_reply)
+
+            # Post-process LLM reply
+            # Ensure the reply doesn't start with the commenter's name if already addressed in the prompt
+            if commenter_name.lower() in llm_reply.lower() and llm_reply.lower().startswith(commenter_name.lower()):
+                llm_reply = re.sub(r"^\s*" + re.escape(commenter_name) + r"[\s,.:;]*", "", llm_reply, flags=re.IGNORECASE).strip()
+                if llm_reply.startswith("!"): # Remove leading exclamation if it resulted from stripping
+                    llm_reply = llm_reply[1:].strip()
+
+
+            # Validate LLM response
+            if not self.validate_response(llm_reply, comment_text):
+                # Fallback if LLM generated an invalid response despite instructions
+                reply = self.get_fallback_response(comment_text, sentiment, comment_language)
+                note = "LLM generated an invalid response, using fallback."
+                controlled_status = True
+            else:
+                reply = llm_reply
+                note = ""
+                controlled_status = False
 
         except requests.exceptions.RequestException as e:
             print(f"API request failed: {e}")
-            response_time = time.time() - start_time
-            fallback_reply = self.get_fallback_response(comment_text, sentiment, comment_language)
-            fallback_tokens = self.count_tokens(fallback_reply)
-            return {
-                "reply": fallback_reply,
-                "sentiment": sentiment,
-                "response_time": f"{response_time:.2f}s",
-                "controlled": True,
-                "slang_detected": False,
-                "comment_id": comment_id,
-                "commenter_name": comment_info.get("commenter_name", ""),
-                "page_name": page_info.get("page_name", ""),
-                "post_id": post_id,
-                "note": f"API call failed: {e}. Fallback response used.",
-                "status_code": 500, # Internal Server Error
-                "output_tokens": fallback_tokens
-            }
+            reply = self.get_fallback_response(comment_text, sentiment, comment_language)
+            note = f"API request failed: {e}. Using fallback."
+            controlled_status = True
+            output_tokens = 0 # No output tokens if API call failed
+        except KeyError as e:
+            print(f"Failed to parse LLM response: {e}. Response: {llm_response_json}")
+            reply = self.get_fallback_response(comment_text, sentiment, comment_language)
+            note = f"Failed to parse LLM response: {e}. Using fallback."
+            controlled_status = True
+            output_tokens = 0 # No output tokens if parsing failed
         except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-            response_time = time.time() - start_time
-            fallback_reply = self.get_fallback_response(comment_text, sentiment, comment_language)
-            fallback_tokens = self.count_tokens(fallback_reply)
-            return {
-                "reply": fallback_reply,
-                "sentiment": sentiment,
-                "response_time": f"{response_time:.2f}s",
-                "controlled": True,
-                "slang_detected": False,
-                "comment_id": comment_id,
-                "commenter_name": comment_info.get("commenter_name", ""),
-                "page_name": page_info.get("page_name", ""),
-                "post_id": post_id,
-                "note": f"Unexpected error: {e}. Fallback response used.",
-                "status_code": 500, # Internal Server Error
-                "output_tokens": fallback_tokens
-            }
+            print(f"An unexpected error occurred during LLM reply generation: {e}")
+            reply = self.get_fallback_response(comment_text, sentiment, comment_language)
+            note = f"Unexpected error: {e}. Using fallback."
+            controlled_status = True
+            output_tokens = 0 # No output tokens if an unexpected error occurred
 
-# Instantiate the bot (only once)
-bot = FacebookBot()
+        # Add comment to history after successful processing or fallback
+        self.add_comment_history(page_id, post_id, comment_info)
+
+        response_time = f"{time.time() - start_time:.2f}s"
+
+        return {
+            "comment_id": comment_id,
+            "commenter_name": commenter_name,
+            "controlled": controlled_status,
+            "input_tokens": input_tokens,
+            "note": note,
+            "output_tokens": output_tokens,
+            "page_name": page_info.get("page_name", ""),
+            "post_id": post_id,
+            "reply": reply,
+            "response_time": response_time,
+            "sentiment": sentiment,
+            "slang_detected": slang_detected,
+            "status_code": reply_status_code
+        }
 @app.route('/',methods=['GET'])
 def display():
     return 'welcome'
-# Define the Flask route for processing comments
+
 @app.route('/process-comment', methods=['POST'])
 def process_comment():
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid JSON data"}), 400
 
+    bot = FacebookBot()
     response = bot.generate_reply(data)
-    return jsonify(response), response.get("status_code", 200) # Use status_code from response
+    return jsonify(response), response.get("status_code", 200)
 
-
-# This part runs the Flask application
 if __name__ == '__main__':
-    # You can change the port if 5000 is already in use
-    app.run(debug=True, host='0.0.0.0', port=os.getenv("PORT", 5000))
+    # For local development, load from .env and run
+    # Ensure OPENAI_API_KEY is set in your .env file
+    if os.getenv("OPENAI_API_KEY") is None:
+        print("Error: OPENAI_API_KEY environment variable not set. Please set it in a .env file or your system environment.")
+    else:
+        app.run(debug=True,host="0.0.0.0",port=5000)

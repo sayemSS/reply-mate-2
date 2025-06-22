@@ -4,3 +4,158 @@
 2025-05-26 10:47:49,788 - __main__ - INFO - Successfully processed comment with neutral sentiment
 2025-05-26 10:48:09,318 - __main__ - INFO - Successfully processed comment with neutral sentiment
 2025-05-26 10:48:46,771 - __main__ - INFO - Successfully processed comment with negative sentiment
+{"asctime": "2025-06-22 12:56:56,291", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "Initialized FacebookBot with model: openai/gpt-4o-mini"}
+{"asctime": "2025-06-22 12:56:56,292", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base."}
+{"asctime": "2025-06-22 12:56:56,456", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "Testing slang detection:"}
+{"asctime": "2025-06-22 12:56:56,459", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0986\u09b8\u09b8\u09be\u09b2\u09be\u09ae\u09c1 \u0986\u09b2\u09be\u0987\u0995\u09c1\u09ae' -> CLEAN"}
+{"asctime": "2025-06-22 12:56:56,459", "name": "__main__.FacebookBot", "levelname": "DEBUG", "message": "Safe phrase detected: 'hello'"}
+{"asctime": "2025-06-22 12:56:56,459", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 'Hello, how are you?' -> CLEAN"}
+{"asctime": "2025-06-22 12:56:56,459", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u09ad\u09be\u09b2\u09cb \u0986\u099b\u09bf' -> CLEAN"}
+{"asctime": "2025-06-22 12:56:56,459", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0995\u09c7\u09ae\u09a8 \u0986\u099b\u09c7\u09a8' -> CLEAN"}
+{"asctime": "2025-06-22 12:56:56,459", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Offensive pattern detected: '\u0996\u09be\u09a8\u0995\u09bf\u09b0 ?\\w*'", "original_text": "\u0996\u09be\u09a8\u0995\u09bf\u09b0 \u09aa\u09cb\u09b2\u09be"}
+{"asctime": "2025-06-22 12:56:56,460", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0996\u09be\u09a8\u0995\u09bf\u09b0 \u09aa\u09cb\u09b2\u09be' -> SLANG"}
+{"asctime": "2025-06-22 12:56:56,460", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Severe slang detected: '\u09ae\u09be\u0997\u09bf'", "original_text": "\u09ae\u09be\u0997\u09bf\u09b0 \u09ac\u09be\u099a\u09cd\u099a\u09be"}
+{"asctime": "2025-06-22 12:56:56,460", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u09ae\u09be\u0997\u09bf\u09b0 \u09ac\u09be\u099a\u09cd\u099a\u09be' -> SLANG"}
+{"asctime": "2025-06-22 12:56:56,465", "name": "__main__", "levelname": "ERROR", "message": "Missing environment variables: ['BOT_API_KEY']"}
+{"asctime": "2025-06-22 13:02:13,257", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "Initialized FacebookBot with model: openai/gpt-4o-mini"}
+{"asctime": "2025-06-22 13:02:13,257", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base."}
+{"asctime": "2025-06-22 13:02:13,392", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "Testing slang detection:"}
+{"asctime": "2025-06-22 13:02:13,394", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0986\u09b8\u09b8\u09be\u09b2\u09be\u09ae\u09c1 \u0986\u09b2\u09be\u0987\u0995\u09c1\u09ae' -> CLEAN"}
+{"asctime": "2025-06-22 13:02:13,394", "name": "__main__.FacebookBot", "levelname": "DEBUG", "message": "Safe phrase detected: 'hello'"}
+{"asctime": "2025-06-22 13:02:13,394", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 'Hello, how are you?' -> CLEAN"}
+{"asctime": "2025-06-22 13:02:13,394", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u09ad\u09be\u09b2\u09cb \u0986\u099b\u09bf' -> CLEAN"}
+{"asctime": "2025-06-22 13:02:13,394", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0995\u09c7\u09ae\u09a8 \u0986\u099b\u09c7\u09a8' -> CLEAN"}
+{"asctime": "2025-06-22 13:02:13,395", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Offensive pattern detected: '\u0996\u09be\u09a8\u0995\u09bf\u09b0 ?\\w*'", "original_text": "\u0996\u09be\u09a8\u0995\u09bf\u09b0 \u09aa\u09cb\u09b2\u09be"}
+{"asctime": "2025-06-22 13:02:13,395", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0996\u09be\u09a8\u0995\u09bf\u09b0 \u09aa\u09cb\u09b2\u09be' -> SLANG"}
+{"asctime": "2025-06-22 13:02:13,395", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Severe slang detected: '\u09ae\u09be\u0997\u09bf'", "original_text": "\u09ae\u09be\u0997\u09bf\u09b0 \u09ac\u09be\u099a\u09cd\u099a\u09be"}
+{"asctime": "2025-06-22 13:02:13,395", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u09ae\u09be\u0997\u09bf\u09b0 \u09ac\u09be\u099a\u09cd\u099a\u09be' -> SLANG"}
+{"asctime": "2025-06-22 13:02:13,399", "name": "__main__", "levelname": "INFO", "message": "Starting Facebook Comment Bot server"}
+{"asctime": "2025-06-22 13:02:13,401", "name": "dotenv.main", "levelname": "WARNING", "message": "python-dotenv could not parse statement starting at line 1"}
+{"asctime": "2025-06-22 13:02:13,424", "name": "werkzeug", "levelname": "INFO", "message": "\u001b[31m\u001b[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.\u001b[0m\n * Running on all addresses (0.0.0.0)\n * Running on http://127.0.0.1:5000\n * Running on http://192.168.70.43:5000"}
+{"asctime": "2025-06-22 13:02:13,424", "name": "werkzeug", "levelname": "INFO", "message": "\u001b[33mPress CTRL+C to quit\u001b[0m"}
+{"asctime": "2025-06-22 13:02:21,428", "name": "werkzeug", "levelname": "INFO", "message": "192.168.70.43 - - [22/Jun/2025 13:02:21] \"GET / HTTP/1.1\" 200 -"}
+{"asctime": "2025-06-22 13:02:21,638", "name": "werkzeug", "levelname": "INFO", "message": "192.168.70.43 - - [22/Jun/2025 13:02:21] \"GET / HTTP/1.1\" 200 -"}
+{"asctime": "2025-06-22 13:02:21,841", "name": "werkzeug", "levelname": "INFO", "message": "192.168.70.43 - - [22/Jun/2025 13:02:21] \"\u001b[33mGET /favicon.ico HTTP/1.1\u001b[0m\" 404 -"}
+{"asctime": "2025-06-22 13:02:31,228", "name": "__main__", "levelname": "WARNING", "message": "Unauthorized API access attempt", "remote_addr": "127.0.0.1", "user_agent": "PostmanRuntime/7.44.1", "endpoint": "process_comment"}
+{"asctime": "2025-06-22 13:02:31,229", "name": "werkzeug", "levelname": "INFO", "message": "127.0.0.1 - - [22/Jun/2025 13:02:31] \"\u001b[31m\u001b[1mPOST /process-comment HTTP/1.1\u001b[0m\" 401 -"}
+{"asctime": "2025-06-22 13:08:10,892", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "Initialized FacebookBot with model: chatgpt 4.o"}
+{"asctime": "2025-06-22 13:08:10,892", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Model 'chatgpt 4.o' not found for tiktoken. Using cl100k_base."}
+{"asctime": "2025-06-22 13:08:11,032", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "Testing slang detection:"}
+{"asctime": "2025-06-22 13:08:11,035", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0986\u09b8\u09b8\u09be\u09b2\u09be\u09ae\u09c1 \u0986\u09b2\u09be\u0987\u0995\u09c1\u09ae' -> CLEAN"}
+{"asctime": "2025-06-22 13:08:11,035", "name": "__main__.FacebookBot", "levelname": "DEBUG", "message": "Safe phrase detected: 'hello'"}
+{"asctime": "2025-06-22 13:08:11,035", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 'Hello, how are you?' -> CLEAN"}
+{"asctime": "2025-06-22 13:08:11,036", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u09ad\u09be\u09b2\u09cb \u0986\u099b\u09bf' -> CLEAN"}
+{"asctime": "2025-06-22 13:08:11,036", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0995\u09c7\u09ae\u09a8 \u0986\u099b\u09c7\u09a8' -> CLEAN"}
+{"asctime": "2025-06-22 13:08:11,036", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Offensive pattern detected: '\u0996\u09be\u09a8\u0995\u09bf\u09b0 ?\\w*'", "original_text": "\u0996\u09be\u09a8\u0995\u09bf\u09b0 \u09aa\u09cb\u09b2\u09be"}
+{"asctime": "2025-06-22 13:08:11,036", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u0996\u09be\u09a8\u0995\u09bf\u09b0 \u09aa\u09cb\u09b2\u09be' -> SLANG"}
+{"asctime": "2025-06-22 13:08:11,037", "name": "__main__.FacebookBot", "levelname": "WARNING", "message": "Severe slang detected: '\u09ae\u09be\u0997\u09bf'", "original_text": "\u09ae\u09be\u0997\u09bf\u09b0 \u09ac\u09be\u099a\u09cd\u099a\u09be"}
+{"asctime": "2025-06-22 13:08:11,037", "name": "__main__.FacebookBot", "levelname": "INFO", "message": "  \u2713 '\u09ae\u09be\u0997\u09bf\u09b0 \u09ac\u09be\u099a\u09cd\u099a\u09be' -> SLANG"}
+{"asctime": "2025-06-22 13:08:11,041", "name": "__main__", "levelname": "INFO", "message": "Starting Facebook Comment Bot server"}
+{"asctime": "2025-06-22 13:08:11,042", "name": "dotenv.main", "levelname": "WARNING", "message": "python-dotenv could not parse statement starting at line 1"}
+{"asctime": "2025-06-22 13:08:11,054", "name": "werkzeug", "levelname": "INFO", "message": "\u001b[31m\u001b[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.\u001b[0m\n * Running on all addresses (0.0.0.0)\n * Running on http://127.0.0.1:5000\n * Running on http://192.168.70.43:5000"}
+{"asctime": "2025-06-22 13:08:11,054", "name": "werkzeug", "levelname": "INFO", "message": "\u001b[33mPress CTRL+C to quit\u001b[0m"}
+{"asctime": "2025-06-22 13:08:18,177", "name": "werkzeug", "levelname": "INFO", "message": "192.168.70.43 - - [22/Jun/2025 13:08:18] \"GET / HTTP/1.1\" 200 -"}
+{"asctime": "2025-06-22 13:08:18,351", "name": "werkzeug", "levelname": "INFO", "message": "192.168.70.43 - - [22/Jun/2025 13:08:18] \"GET / HTTP/1.1\" 200 -"}
+{"asctime": "2025-06-22 13:08:18,506", "name": "werkzeug", "levelname": "INFO", "message": "192.168.70.43 - - [22/Jun/2025 13:08:18] \"\u001b[33mGET /favicon.ico HTTP/1.1\u001b[0m\" 404 -"}
+{"asctime": "2025-06-22 13:08:23,777", "name": "__main__", "levelname": "WARNING", "message": "Unauthorized API access attempt", "remote_addr": "127.0.0.1", "user_agent": "PostmanRuntime/7.44.1", "endpoint": "process_comment"}
+{"asctime": "2025-06-22 13:08:23,777", "name": "werkzeug", "levelname": "INFO", "message": "127.0.0.1 - - [22/Jun/2025 13:08:23] \"\u001b[31m\u001b[1mPOST /process-comment HTTP/1.1\u001b[0m\" 401 -"}
+{"asctime": "2025-06-22 13:08:25,784", "name": "__main__", "levelname": "WARNING", "message": "Unauthorized API access attempt", "remote_addr": "127.0.0.1", "user_agent": "PostmanRuntime/7.44.1", "endpoint": "process_comment"}
+{"asctime": "2025-06-22 13:08:25,784", "name": "werkzeug", "levelname": "INFO", "message": "127.0.0.1 - - [22/Jun/2025 13:08:25] \"\u001b[31m\u001b[1mPOST /process-comment HTTP/1.1\u001b[0m\" 401 -"}
+{"asctime": "2025-06-22 13:09:57,994", "name": "__main__", "levelname": "WARNING", "message": "Unauthorized API access attempt", "remote_addr": "127.0.0.1", "user_agent": "PostmanRuntime/7.44.1", "endpoint": "process_comment"}
+{"asctime": "2025-06-22 13:09:57,995", "name": "werkzeug", "levelname": "INFO", "message": "127.0.0.1 - - [22/Jun/2025 13:09:57] \"\u001b[31m\u001b[1mPOST /process-comment HTTP/1.1\u001b[0m\" 401 -"}
+{"asctime": "2025-06-22 13:09:59,944", "name": "__main__", "levelname": "WARNING", "message": "Unauthorized API access attempt", "remote_addr": "127.0.0.1", "user_agent": "PostmanRuntime/7.44.1", "endpoint": "process_comment"}
+{"asctime": "2025-06-22 13:09:59,944", "name": "werkzeug", "levelname": "INFO", "message": "127.0.0.1 - - [22/Jun/2025 13:09:59] \"\u001b[31m\u001b[1mPOST /process-comment HTTP/1.1\u001b[0m\" 401 -"}
+{"asctime": "2025-06-22 13:10:17,448", "name": "__main__", "levelname": "WARNING", "message": "Unauthorized API access attempt", "remote_addr": "127.0.0.1", "user_agent": "PostmanRuntime/7.44.1", "endpoint": "process_comment"}
+{"asctime": "2025-06-22 13:10:17,448", "name": "werkzeug", "levelname": "INFO", "message": "127.0.0.1 - - [22/Jun/2025 13:10:17] \"\u001b[31m\u001b[1mPOST /process-comment HTTP/1.1\u001b[0m\" 401 -"}
+2025-06-22 13:45:37,921 - INFO - Starting Facebook Bot application...
+2025-06-22 13:45:37,923 - WARNING - python-dotenv could not parse statement starting at line 4
+2025-06-22 13:45:37,923 - WARNING - python-dotenv could not parse statement starting at line 5
+2025-06-22 13:45:37,923 - WARNING - python-dotenv could not parse statement starting at line 6
+2025-06-22 13:45:37,923 - WARNING - python-dotenv could not parse statement starting at line 7
+2025-06-22 13:45:37,945 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.70.43:5000
+2025-06-22 13:45:37,945 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-22 13:45:50,198 - INFO - 192.168.70.43 - - [22/Jun/2025 13:45:50] "GET / HTTP/1.1" 200 -
+2025-06-22 13:45:55,161 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 13:45:55,162 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 13:45:55,357 - INFO - Testing slang detection:
+2025-06-22 13:45:55,422 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 13:45:58,100 - INFO - 127.0.0.1 - - [22/Jun/2025 13:45:58] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 13:46:15,835 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 13:46:15,835 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 13:46:15,835 - INFO - Testing slang detection:
+2025-06-22 13:46:15,888 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 13:46:18,216 - INFO - 127.0.0.1 - - [22/Jun/2025 13:46:18] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 13:53:02,313 - INFO - Starting Facebook Bot application...
+2025-06-22 13:53:02,315 - WARNING - python-dotenv could not parse statement starting at line 4
+2025-06-22 13:53:02,316 - WARNING - python-dotenv could not parse statement starting at line 5
+2025-06-22 13:53:02,316 - WARNING - python-dotenv could not parse statement starting at line 6
+2025-06-22 13:53:02,316 - WARNING - python-dotenv could not parse statement starting at line 7
+2025-06-22 13:53:02,342 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.70.43:5000
+2025-06-22 13:53:02,342 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-22 13:53:04,182 - INFO - 192.168.70.43 - - [22/Jun/2025 13:53:04] "GET / HTTP/1.1" 200 -
+2025-06-22 13:53:04,354 - INFO - 192.168.70.43 - - [22/Jun/2025 13:53:04] "GET / HTTP/1.1" 200 -
+2025-06-22 13:53:11,316 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 13:53:11,316 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 13:53:11,948 - INFO - Testing slang detection:
+2025-06-22 13:53:12,067 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 13:53:12,073 - INFO - Comment: 'valo na apnader product' | Detected language: bangla | Sentiment: Negative
+2025-06-22 13:53:14,469 - INFO - 127.0.0.1 - - [22/Jun/2025 13:53:14] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 14:17:33,503 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 14:17:33,503 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 14:17:33,503 - INFO - Testing slang detection:
+2025-06-22 14:17:33,560 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 14:17:33,560 - INFO - Comment: 'baller product' | Detected language: english | Sentiment: Neutral
+2025-06-22 14:17:35,984 - INFO - 127.0.0.1 - - [22/Jun/2025 14:17:35] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 14:17:52,426 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 14:17:52,426 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 14:17:52,427 - INFO - Testing slang detection:
+2025-06-22 14:17:52,476 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 14:17:52,477 - INFO - Comment: 'ball product' | Detected language: english | Sentiment: Neutral
+2025-06-22 14:17:54,606 - INFO - 127.0.0.1 - - [22/Jun/2025 14:17:54] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 14:18:23,000 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 14:18:23,001 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 14:18:23,001 - INFO - Testing slang detection:
+2025-06-22 14:18:23,064 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 14:18:23,065 - INFO - Comment: 'apnader product kivabea recevird korbo' | Detected language: english | Sentiment: Neutral
+2025-06-22 14:18:25,102 - INFO - 127.0.0.1 - - [22/Jun/2025 14:18:25] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 14:18:34,817 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 14:18:34,817 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 14:18:34,817 - INFO - Testing slang detection:
+2025-06-22 14:18:34,867 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 14:18:34,868 - INFO - Comment: 'apnader product kivabea recevird korbo' | Detected language: english | Sentiment: Neutral
+2025-06-22 14:18:37,109 - INFO - 127.0.0.1 - - [22/Jun/2025 14:18:37] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 14:18:55,781 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 14:18:55,781 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 14:18:55,781 - INFO - Testing slang detection:
+2025-06-22 14:18:55,841 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 14:18:55,842 - INFO - Comment: 'apnader product kivabea recevied korbo' | Detected language: english | Sentiment: Neutral
+2025-06-22 14:18:58,335 - INFO - 127.0.0.1 - - [22/Jun/2025 14:18:58] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 14:19:12,882 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 14:19:12,883 - WARNING - Model 'openai/gpt-4o-mini' not found for tiktoken. Using cl100k_base.
+2025-06-22 14:19:12,885 - INFO - Testing slang detection:
+2025-06-22 14:19:12,943 - INFO - Comment count incremented for page food_delivery_101. New count: 1
+2025-06-22 14:19:12,944 - INFO - Comment: 'kmon asen?' | Detected language: english | Sentiment: Neutral
+2025-06-22 14:19:15,006 - INFO - 127.0.0.1 - - [22/Jun/2025 14:19:15] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 15:18:09,958 - INFO - Initialized FacebookBot with model: openai/gpt-4o-mini via OpenRouter
+2025-06-22 15:18:10,122 - INFO - Testing slang detection:
+2025-06-22 15:18:10,139 - INFO - Starting Facebook Bot application...
+2025-06-22 15:18:10,140 - WARNING - python-dotenv could not parse statement starting at line 4
+2025-06-22 15:18:10,140 - WARNING - python-dotenv could not parse statement starting at line 5
+2025-06-22 15:18:10,140 - WARNING - python-dotenv could not parse statement starting at line 6
+2025-06-22 15:18:10,140 - WARNING - python-dotenv could not parse statement starting at line 7
+2025-06-22 15:18:10,160 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.70.43:5000
+2025-06-22 15:18:10,161 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-22 15:18:13,186 - INFO - 192.168.70.43 - - [22/Jun/2025 15:18:13] "GET / HTTP/1.1" 200 -
+2025-06-22 15:18:13,282 - INFO - 192.168.70.43 - - [22/Jun/2025 15:18:13] "GET / HTTP/1.1" 200 -
+2025-06-22 15:18:22,309 - INFO - 127.0.0.1 - - [22/Jun/2025 15:18:22] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 15:18:49,516 - INFO - 127.0.0.1 - - [22/Jun/2025 15:18:49] "POST /process-comment HTTP/1.1" 200 -
+2025-06-22 15:19:06,151 - INFO - 127.0.0.1 - - [22/Jun/2025 15:19:06] "POST /process-comment HTTP/1.1" 200 -
